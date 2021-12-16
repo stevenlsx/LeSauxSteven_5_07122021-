@@ -1,3 +1,5 @@
+//Cette fonction va récuperer les données de l'API, les convertir au format JSON, on affiche le contenu de allProduct dans data
+//et on apelle la fonction displayProduct pour integrer les valeurs récuperer dans notre site web.
 let allProducts = [];
 const htmlProducts = document.getElementById("items");
 
@@ -11,6 +13,8 @@ const fetchProducts = async () => {
 };
 fetchProducts();
 
+//Cette fonction va permettre d'afficher les produits dans notre site. Pour chaque produit stocker dans allProduct, on
+//on injecte du html qui contient les données récupérées depuis l'API. Puis on l'injecte dans notre ID Items du fichier HTML.
 function displayProducts() {
   let html = "";
   allProducts.forEach((product) => {
