@@ -19,7 +19,7 @@ function displayProducts() {
   let html = "";
   allProducts.forEach((product) => {
     html += `
-    <a href="./product.html?id=${product.id}">
+    <a href="./product.html?id=${product._id}">
               <article>
                 <img src="${product.imageUrl}" alt="${product.altTxt}">
                 <h3 class="productName">${product.name}</h3>
