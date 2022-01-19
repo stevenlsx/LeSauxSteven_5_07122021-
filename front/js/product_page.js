@@ -76,7 +76,7 @@ function addToCart() {
     quantity: parseInt(inputQuantity.value), //On récupère une string que l'on convertit en chiffre avec parseInt.
     color: colors.value,
   };
-  console.log(oneProduct);
+  console.log(productCart);
   console.log(cart);
   if (cart.length > 0) {
     let productExisted = false;
