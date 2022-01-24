@@ -69,8 +69,6 @@ Et si le panier est vide au depart, alors idem, on ajoute le produit au panier. 
 que le panier est poussé sur le local storage. 
  */
 function addToCart() {
-  console.log(inputQuantity.value);
-  console.log(colors.value);
   const productCart = {
     id: oneProduct._id,
     quantity: parseInt(inputQuantity.value), //On récupère une string que l'on convertit en chiffre avec parseInt.
@@ -91,8 +89,6 @@ function addToCart() {
         break;
       }
     }
-
-    console.log(cart);
     if (productExisted === false) {
       cart.push(productCart);
       localStorage.panier = JSON.stringify(cart);
