@@ -61,21 +61,20 @@ function displayCartItems() {
   });
   cartItems.innerHTML = html;
 }
-let htmlItem = document.getElementsByClassName(".itemQuantity");
+
 function changeQuantity(e) {
   for (let i = 0; i < productsData.length; i++) {
     if (
-      productsData[i].id === e.target.id &&
-      productsData[i].color === e.target.color
+      productsData[i].id === e.target.dataset.id &&
+      productsData[i].color === e.target.dataset.color
     ) {
       productsData[i].quantity = e.target.value;
-      localStorage.panier.quantity = JSON.stringify(productsData);
-      htmlItem.innerHTML += `<input type="number" onchange="changeQuantity(event)" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${productsData.quantity}">`;
-      console.log(productsData);
-      break;
+      localStorage.removeItem(panier);
+      localStorage.panier = JSON.stringify(productsData);
     }
-    console.log(e);
   }
+  console.log(e);
+  console.log(productsData);
 }
 
 function deleteProduct(e) {
