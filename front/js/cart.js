@@ -25,6 +25,8 @@ async function init() {
           price: data.price,
         });
         displayCartItems();
+        priceCalcul();
+        quantityCalcul();
         console.log(productsData);
       })
   );
@@ -49,10 +51,10 @@ function displayCartItems() {
                   <div class="cart__item__content__settings">
                     <div class="cart__item__content__settings__quantity">
                       <p>Qté : </p>
-                      <input type="number" onchange="changeQuantity(event)" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${productData.quantity}">
+                      <input type="number" onchange="changeQuantity(event, '${productData.id}', '${productData.color}')" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${productData.quantity}">
                     </div>
                     <div class="cart__item__content__settings__delete">
-                      <p class="deleteItem" onclick="deleteProduct(event)">Supprimer</p>
+                      <p class="deleteItem" onclick="deleteProduct('${productData.id}', '${productData.color}')">Supprimer</p>
                     </div>
                   </div>
                 </div>
@@ -62,21 +64,71 @@ function displayCartItems() {
   cartItems.innerHTML = html;
 }
 
-function changeQuantity(e) {
+function changeQuantity(e, id, color) {
   for (let i = 0; i < productsData.length; i++) {
-    if (
-      productsData[i].id === e.target.dataset.id &&
-      productsData[i].color === e.target.dataset.color
-    ) {
-      productsData[i].quantity = e.target.value;
-      localStorage.removeItem(panier);
-      localStorage.panier = JSON.stringify(productsData);
+    if (productsData[i].id === id && productsData[i].color === color) {
+      productsData[i].quantity = parseInt(e.target.value);
+    }
+    if (parseStorageCart[i].id === id && parseStorageCart[i].color === color) {
+      parseStorageCart[i].quantity = parseInt(e.target.value);
     }
   }
+  localStorage.panier = JSON.stringify(parseStorageCart);
+  priceCalcul();
+  quantityCalcul();
   console.log(e);
   console.log(productsData);
 }
 
-function deleteProduct(e) {
-  console.log(e);
+function deleteProduct(id, color) {
+  productsData = productsData.filter((product) => {
+    return product.id !== id || product.color !== color;
+  });
+  parseStorageCart = parseStorageCart.filter((product) => {
+    return product.id !== id || product.color !== color;
+  });
+  localStorage.panier = JSON.stringify(parseStorageCart);
+  displayCartItems();
+  priceCalcul();
+  quantityCalcul();
 }
+let totalQuantity = document.getElementById("totalQuantity");
+let totalPrice = document.getElementById("totalPrice");
+
+function priceCalcul() {
+  let priceByQuantity = 0;
+  let total = 0;
+  for (let i = 0; i < productsData.length; i++) {
+    priceByQuantity = productsData[i].quantity * productsData[i].price;
+    total += priceByQuantity;
+  }
+  totalPrice.innerHTML = `${total}`;
+}
+function quantityCalcul() {
+  let allQuantity = 0;
+  for (let i = 0; i < productsData.length; i++) {
+    allQuantity += productsData[i].quantity;
+  }
+  totalQuantity.innerHTML = allQuantity;
+}
+
+const orderForm = document.getElementsByClassName("cart__order__form")[0];
+console.log(orderForm);
+const firstName = document.getElementById("firstName");
+console.log(firstName);
+const lastName = document.getElementById("lastName");
+const adress = document.getElementById("adress");
+const city = document.getElementById("city");
+const email = document.getElementById("email");
+
+orderForm.addEventListener("submit", (e) => {
+  e.preventDefault;
+
+  if (firstName === "" || firstName == null) {
+    const firstNameErr = document.getElementById("firstNameErrorMsg");
+
+    //alert("please enter all the details");
+    firstNameErr.innerHTML = "Veuillez remplir le champ";
+    firstNameErr.style.color = "red";
+  }
+});
