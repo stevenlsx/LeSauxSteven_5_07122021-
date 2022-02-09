@@ -79,7 +79,7 @@ function changeQuantity(e, id, color) {
   console.log(e);
   console.log(productsData);
 }
-
+//Cette fonction supprime le/les produits voulu du localstorage et de la page panier les articles
 function deleteProduct(id, color) {
   productsData = productsData.filter((product) => {
     return product.id !== id || product.color !== color;
@@ -95,6 +95,7 @@ function deleteProduct(id, color) {
 let totalQuantity = document.getElementById("totalQuantity");
 let totalPrice = document.getElementById("totalPrice");
 
+//Cette fonction calcul le prix total du panier
 function priceCalcul() {
   let priceByQuantity = 0;
   let total = 0;
@@ -104,6 +105,7 @@ function priceCalcul() {
   }
   totalPrice.innerHTML = `${total}`;
 }
+//cette fonction calcul la quantité totale des articles du panier
 function quantityCalcul() {
   let allQuantity = 0;
   for (let i = 0; i < productsData.length; i++) {
@@ -117,18 +119,111 @@ console.log(orderForm);
 const firstName = document.getElementById("firstName");
 console.log(firstName);
 const lastName = document.getElementById("lastName");
-const adress = document.getElementById("adress");
+const adress = document.getElementById("address");
 const city = document.getElementById("city");
-const email = document.getElementById("email");
+const email = document.getElementById("email"); //Recupère message erreur
 
-orderForm.addEventListener("submit", (e) => {
-  e.preventDefault;
+const regexPrim = /^[a-z ,.'-]+$/i; //Regex pour prenom, nom, ville
+const regexMail =
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-  if (firstName === "" || firstName == null) {
-    const firstNameErr = document.getElementById("firstNameErrorMsg");
+let contactObj = {
+  firstName: "",
+  lastName: "",
+  adress: "",
+  city: "",
+  email: "",
+};
+//Cet ensemble de fonction vérifié la validité des champs du formulaire de la page panier.
+firstName.addEventListener("change", (e) => {
+  console.log(e.target.value);
+  const textError = document.getElementById("firstNameErrorMsg");
 
-    //alert("please enter all the details");
-    firstNameErr.innerHTML = "Veuillez remplir le champ";
-    firstNameErr.style.color = "red";
+  if (firstName.value.match(regexPrim)) {
+    textError.innerHTML = "Valide";
+    textError.style.color = "#00FF1A";
+    contactObj.firstName = e.target.value;
+    console.log(contactObj);
+  } else {
+    textError.innerHTML = "Le champs est invalide";
+    textError.style.color = "red";
+    e.preventDefault;
+    console.log(textError);
+  }
+});
+
+lastName.addEventListener("change", (e) => {
+  console.log(e.target.value);
+  const textError = document.getElementById("lastNameErrorMsg");
+  if (lastName.value.match(regexPrim)) {
+    textError.innerHTML = "Valide";
+    textError.style.color = "#00FF1A";
+    contactObj.lastName = e.target.value;
+    console.log(contactObj);
+  } else {
+    textError.innerHTML = "Le champs est invalide";
+    textError.style.color = "red";
+    e.preventDefault;
+    console.log(textError);
+  }
+});
+adress.addEventListener("change", (e) => {
+  console.log(e.target.value);
+  const textError = document.getElementById("addressErrorMsg");
+  if (adress.value.match(regexPrim)) {
+    textError.innerHTML = "Valide";
+    textError.style.color = "#00FF1A";
+    contactObj.adress = e.target.value;
+    console.log(contactObj);
+  } else {
+    textError.innerHTML = "Le champs est invalide";
+    textError.style.color = "red";
+    e.preventDefault;
+    console.log(textError);
+  }
+});
+city.addEventListener("change", (e) => {
+  console.log(e.target.value);
+  const textError = document.getElementById("cityErrorMsg");
+  if (city.value.match(regexPrim)) {
+    textError.innerHTML = "Valide";
+    textError.style.color = "#00FF1A";
+    contactObj.city = e.target.value;
+    console.log(contactObj);
+  } else {
+    textError.innerHTML = "Le champs est invalide";
+    textError.style.color = "red";
+    e.preventDefault;
+    console.log(textError);
+  }
+});
+email.addEventListener("change", (e) => {
+  console.log(e.target.value);
+  const textError = document.getElementById("emailErrorMsg");
+  if (email.value.match(regexMail)) {
+    textError.innerHTML = "Valide";
+    textError.style.color = "#00FF1A";
+    contactObj.email = e.target.value;
+    console.log(contactObj);
+  } else {
+    textError.innerHTML = "Le champs est invalide";
+    textError.style.color = "red";
+    e.preventDefault;
+    console.log(textError);
+  }
+});
+const btnForm = document.getElementById("order");
+btnForm.addEventListener("click", (e) => {
+  console.log(e.target.value);
+
+  if (
+    firstName.value == "" ||
+    lastName.value == "" ||
+    adress.value == "" ||
+    city.value == "" ||
+    email.value == ""
+  ) {
+    alert("Veuillez remplir tous les champs");
+    e.preventDefault;
   }
 });
