@@ -27,7 +27,8 @@ async function init() {
         displayCartItems();
         priceCalcul();
         quantityCalcul();
-        console.log(productsData);
+        recupIds();
+        //console.log(productsData);
       })
   );
 }
@@ -76,6 +77,7 @@ function changeQuantity(e, id, color) {
   localStorage.panier = JSON.stringify(parseStorageCart);
   priceCalcul();
   quantityCalcul();
+  recupIds();
   console.log(e);
   console.log(productsData);
 }
@@ -91,6 +93,7 @@ function deleteProduct(id, color) {
   displayCartItems();
   priceCalcul();
   quantityCalcul();
+  recupIds();
 }
 let totalQuantity = document.getElementById("totalQuantity");
 let totalPrice = document.getElementById("totalPrice");
@@ -133,6 +136,7 @@ let contactObj = {
   adress: "",
   city: "",
   email: "",
+  arrayOfIfd: [],
 };
 //Cet ensemble de fonction vérifié la validité des champs du formulaire de la page panier.
 firstName.addEventListener("change", (e) => {
@@ -146,7 +150,7 @@ firstName.addEventListener("change", (e) => {
     console.log(contactObj);
   } else {
     textError.innerHTML = "Le champs est invalide";
-    textError.style.color = "red";
+    textError.style.color = "#red";
     e.preventDefault;
     console.log(textError);
   }
@@ -225,5 +229,33 @@ btnForm.addEventListener("click", (e) => {
   ) {
     alert("Veuillez remplir tous les champs");
     e.preventDefault;
+  } else {
+    post();
   }
 });
+
+function recupIds() {
+  let tableOfIds = [];
+  for (let i = 0; i < productsData.length; i++) {
+    tableOfIds.push(productsData[i].id);
+    console.log(tableOfIds);
+    contactObj.arrayOfIfd = tableOfIds;
+    console.log(contactObj);
+  }
+}
+
+function post() {
+  fetch("http://localhost:3000/api/products", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(contactObj),
+  })
+    .then((res) => {
+      console.log(res);
+      return res.json;
+    })
+    .then((data) => console.log(data));
+}
+post();
