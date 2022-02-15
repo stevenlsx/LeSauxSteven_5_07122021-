@@ -117,7 +117,7 @@ function quantityCalcul() {
   totalQuantity.innerHTML = allQuantity;
 }
 
-const orderForm = document.getElementsByClassName("cart__order__form")[0];
+const orderForm = document.getElementsByClassName("cart__order__form");
 console.log(orderForm);
 const firstName = document.getElementById("firstName");
 console.log(firstName);
@@ -216,8 +216,9 @@ email.addEventListener("change", (e) => {
     console.log(textError);
   }
 });
-const btnForm = document.getElementById("order");
-btnForm.addEventListener("submit", (e) => {
+let order = document.getElementById("order");
+
+divForm.addEventListener("submit", (e) => {
   console.log(e.target.value);
 
   if (
@@ -230,8 +231,8 @@ btnForm.addEventListener("submit", (e) => {
     alert("Veuillez remplir tous les champs");
     e.preventDefault;
   } else {
-    location.href = "confirmation.html";
     post();
+    order.location.href = "main/front/html/confirmation.html";
   }
 });
 
@@ -240,18 +241,18 @@ function recupIds() {
   for (let i = 0; i < productsData.length; i++) {
     tableOfIds.push(productsData[i].id);
     console.log(tableOfIds);
-    contactObj.arrayOfIfd = tableOfIds;
-    console.log(contactObj);
   }
 }
-
 function post() {
   fetch("http://localhost:3000/api/products", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(contactObj),
+    body: JSON.stringify({
+      contact: contactObj,
+      products: tableOfIds,
+    }),
   })
     .then((res) => {
       console.log(res.json);
@@ -259,3 +260,4 @@ function post() {
     })
     .then((data) => console.log(data));
 }
+post();
