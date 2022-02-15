@@ -217,7 +217,7 @@ email.addEventListener("change", (e) => {
   }
 });
 const btnForm = document.getElementById("order");
-btnForm.addEventListener("click", (e) => {
+btnForm.addEventListener("submit", (e) => {
   console.log(e.target.value);
 
   if (
@@ -230,6 +230,7 @@ btnForm.addEventListener("click", (e) => {
     alert("Veuillez remplir tous les champs");
     e.preventDefault;
   } else {
+    location.href = "confirmation.html";
     post();
   }
 });
@@ -253,9 +254,8 @@ function post() {
     body: JSON.stringify(contactObj),
   })
     .then((res) => {
-      console.log(res);
+      console.log(res.json);
       return res.json;
     })
     .then((data) => console.log(data));
 }
-post();
