@@ -117,7 +117,7 @@ function quantityCalcul() {
   totalQuantity.innerHTML = allQuantity;
 }
 
-const orderForm = document.getElementsByClassName("cart__order__form");
+const orderForm = document.querySelector(".cart__order__form");
 console.log(orderForm);
 const firstName = document.getElementById("firstName");
 console.log(firstName);
@@ -140,30 +140,23 @@ let contactObj = {
 };
 //Cet ensemble de fonction vérifié la validité des champs du formulaire de la page panier.
 firstName.addEventListener("change", (e) => {
-  console.log(e.target.value);
   const textError = document.getElementById("firstNameErrorMsg");
 
   if (firstName.value.match(regexPrim)) {
-    textError.innerHTML = "Valide";
-    textError.style.color = "#00FF1A";
     contactObj.firstName = e.target.value;
-    console.log(contactObj);
   } else {
     textError.innerHTML = "Le champs est invalide";
-    textError.style.color = "#red";
+    textError.style.color = "red";
     e.preventDefault;
     console.log(textError);
   }
 });
 
 lastName.addEventListener("change", (e) => {
-  console.log(e.target.value);
   const textError = document.getElementById("lastNameErrorMsg");
+
   if (lastName.value.match(regexPrim)) {
-    textError.innerHTML = "Valide";
-    textError.style.color = "#00FF1A";
     contactObj.lastName = e.target.value;
-    console.log(contactObj);
   } else {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
@@ -172,13 +165,10 @@ lastName.addEventListener("change", (e) => {
   }
 });
 adress.addEventListener("change", (e) => {
-  console.log(e.target.value);
   const textError = document.getElementById("addressErrorMsg");
+
   if (adress.value.match(regexPrim)) {
-    textError.innerHTML = "Valide";
-    textError.style.color = "#00FF1A";
     contactObj.adress = e.target.value;
-    console.log(contactObj);
   } else {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
@@ -187,13 +177,10 @@ adress.addEventListener("change", (e) => {
   }
 });
 city.addEventListener("change", (e) => {
-  console.log(e.target.value);
   const textError = document.getElementById("cityErrorMsg");
+
   if (city.value.match(regexPrim)) {
-    textError.innerHTML = "Valide";
-    textError.style.color = "#00FF1A";
     contactObj.city = e.target.value;
-    console.log(contactObj);
   } else {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
@@ -202,13 +189,9 @@ city.addEventListener("change", (e) => {
   }
 });
 email.addEventListener("change", (e) => {
-  console.log(e.target.value);
   const textError = document.getElementById("emailErrorMsg");
   if (email.value.match(regexMail)) {
-    textError.innerHTML = "Valide";
-    textError.style.color = "#00FF1A";
     contactObj.email = e.target.value;
-    console.log(contactObj);
   } else {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
@@ -216,33 +199,27 @@ email.addEventListener("change", (e) => {
     console.log(textError);
   }
 });
-let order = document.getElementById("order");
 
-divForm.addEventListener("submit", (e) => {
+orderForm.addEventListener("submit", (e) => {
   console.log(e.target.value);
 
-  if (
-    firstName.value == "" ||
-    lastName.value == "" ||
-    adress.value == "" ||
-    city.value == "" ||
-    email.value == ""
-  ) {
-    alert("Veuillez remplir tous les champs");
-    e.preventDefault;
-  } else {
+  if (e.target.value.match(regexPrim) && email.value.match(regexMail)) {
     post();
-    order.location.href = "main/front/html/confirmation.html";
+  } else {
+    e.preventDefault;
+    alert("Veuillez remplir correctement les champs");
   }
 });
 
+let tableOfIds;
 function recupIds() {
-  let tableOfIds = [];
   for (let i = 0; i < productsData.length; i++) {
+    tableOfIds = [];
     tableOfIds.push(productsData[i].id);
     console.log(tableOfIds);
   }
 }
+
 function post() {
   fetch("http://localhost:3000/api/products", {
     method: "POST",
@@ -255,9 +232,10 @@ function post() {
     }),
   })
     .then((res) => {
-      console.log(res.json);
-      return res.json;
+      res.json;
     })
-    .then((data) => console.log(data));
+    .then(
+      (data) =>
+        (window.location.href = `main/front/html/confirmation.html/${data}`)
+    );
 }
-post();
