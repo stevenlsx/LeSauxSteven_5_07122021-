@@ -120,7 +120,6 @@ function quantityCalcul() {
 const orderForm = document.querySelector(".cart__order__form");
 console.log(orderForm);
 const firstName = document.getElementById("firstName");
-console.log(firstName);
 const lastName = document.getElementById("lastName");
 const adress = document.getElementById("address");
 const city = document.getElementById("city");
@@ -136,14 +135,15 @@ let contactObj = {
   adress: "",
   city: "",
   email: "",
-  arrayOfIfd: [],
 };
+
 //Cet ensemble de fonction vérifié la validité des champs du formulaire de la page panier.
 firstName.addEventListener("change", (e) => {
   const textError = document.getElementById("firstNameErrorMsg");
 
   if (firstName.value.match(regexPrim)) {
     contactObj.firstName = e.target.value;
+    return true;
   } else {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
@@ -157,6 +157,7 @@ lastName.addEventListener("change", (e) => {
 
   if (lastName.value.match(regexPrim)) {
     contactObj.lastName = e.target.value;
+    return true;
   } else {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
@@ -169,6 +170,7 @@ adress.addEventListener("change", (e) => {
 
   if (adress.value.match(regexPrim)) {
     contactObj.adress = e.target.value;
+    return true;
   } else {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
@@ -181,6 +183,7 @@ city.addEventListener("change", (e) => {
 
   if (city.value.match(regexPrim)) {
     contactObj.city = e.target.value;
+    return true;
   } else {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
@@ -192,6 +195,7 @@ email.addEventListener("change", (e) => {
   const textError = document.getElementById("emailErrorMsg");
   if (email.value.match(regexMail)) {
     contactObj.email = e.target.value;
+    return true;
   } else {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
@@ -201,13 +205,19 @@ email.addEventListener("change", (e) => {
 });
 
 orderForm.addEventListener("submit", (e) => {
-  console.log(e.target.value);
-
-  if (e.target.value.match(regexPrim) && email.value.match(regexMail)) {
+  if (
+    contactObj.firstName !== "" &&
+    contactObj.lastName !== "" &&
+    contactObj.adress !== "" &&
+    contactObj.city !== "" &&
+    contactObj.email !== ""
+  ) {
     post();
+    return true;
   } else {
-    e.preventDefault;
     alert("Veuillez remplir correctement les champs");
+    e.preventDefault;
+    return false;
   }
 });
 
