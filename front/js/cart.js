@@ -118,10 +118,9 @@ function quantityCalcul() {
 }
 
 const orderForm = document.querySelector(".cart__order__form");
-console.log(orderForm);
 const firstName = document.getElementById("firstName");
 const lastName = document.getElementById("lastName");
-const adress = document.getElementById("address");
+const address = document.getElementById("address");
 const city = document.getElementById("city");
 const email = document.getElementById("email"); //Recupère message erreur
 
@@ -132,7 +131,7 @@ const regexMail =
 let contactObj = {
   firstName: "",
   lastName: "",
-  adress: "",
+  address: "",
   city: "",
   email: "",
 };
@@ -143,7 +142,7 @@ firstName.addEventListener("change", (e) => {
 
   if (firstName.value.match(regexPrim)) {
     contactObj.firstName = e.target.value;
-    return true;
+    textError.innerHTML = "";
   } else {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
@@ -157,7 +156,7 @@ lastName.addEventListener("change", (e) => {
 
   if (lastName.value.match(regexPrim)) {
     contactObj.lastName = e.target.value;
-    return true;
+    textError.innerHTML = "";
   } else {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
@@ -165,12 +164,12 @@ lastName.addEventListener("change", (e) => {
     console.log(textError);
   }
 });
-adress.addEventListener("change", (e) => {
+address.addEventListener("change", (e) => {
   const textError = document.getElementById("addressErrorMsg");
 
-  if (adress.value.match(regexPrim)) {
-    contactObj.adress = e.target.value;
-    return true;
+  if (address.value.match(regexPrim)) {
+    contactObj.address = e.target.value;
+    textError.innerHTML = "";
   } else {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
@@ -183,7 +182,7 @@ city.addEventListener("change", (e) => {
 
   if (city.value.match(regexPrim)) {
     contactObj.city = e.target.value;
-    return true;
+    textError.innerHTML = "";
   } else {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
@@ -195,7 +194,7 @@ email.addEventListener("change", (e) => {
   const textError = document.getElementById("emailErrorMsg");
   if (email.value.match(regexMail)) {
     contactObj.email = e.target.value;
-    return true;
+    textError.innerHTML = "";
   } else {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
@@ -205,19 +204,17 @@ email.addEventListener("change", (e) => {
 });
 
 orderForm.addEventListener("submit", (e) => {
+  e.preventDefault;
   if (
     contactObj.firstName !== "" &&
     contactObj.lastName !== "" &&
-    contactObj.adress !== "" &&
+    contactObj.address !== "" &&
     contactObj.city !== "" &&
     contactObj.email !== ""
   ) {
     post();
-    return true;
   } else {
     alert("Veuillez remplir correctement les champs");
-    e.preventDefault;
-    return false;
   }
 });
 
@@ -233,6 +230,7 @@ function recupIds() {
 function post() {
   fetch("http://localhost:3000/api/products", {
     method: "POST",
+    redirect: "manual",
     headers: {
       "Content-Type": "application/json",
     },
@@ -242,10 +240,16 @@ function post() {
     }),
   })
     .then((res) => {
-      res.json;
+      if (res.ok) {
+        return res.json();
+      } else {
+        throw new Error("Erreur survenue");
+      }
     })
-    .then(
-      (data) =>
-        (window.location.href = `main/front/html/confirmation.html/${data}`)
-    );
+    .then((data) => {
+      window.location.replace(`../html/confirmation.html/${data}`);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }
