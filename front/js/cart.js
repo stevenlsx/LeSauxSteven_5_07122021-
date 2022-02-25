@@ -1,4 +1,3 @@
-//Const qui récupère l'html de cart.html
 const cartItems = document.getElementById("cart__items");
 
 //Variable de stockage pour la fonction init
@@ -28,7 +27,6 @@ async function init() {
         priceCalcul();
         quantityCalcul();
         recupIds();
-        //console.log(productsData);
       })
   );
 }
@@ -64,7 +62,7 @@ function displayCartItems() {
   });
   cartItems.innerHTML = html;
 }
-
+//La fonction qui permet de changer la quantité des produits dans le panier.
 function changeQuantity(e, id, color) {
   for (let i = 0; i < productsData.length; i++) {
     if (productsData[i].id === id && productsData[i].color === color) {
@@ -95,6 +93,7 @@ function deleteProduct(id, color) {
   quantityCalcul();
   recupIds();
 }
+
 let totalQuantity = document.getElementById("totalQuantity");
 let totalPrice = document.getElementById("totalPrice");
 
@@ -116,18 +115,21 @@ function quantityCalcul() {
   }
   totalQuantity.innerHTML = allQuantity;
 }
-
+//Ces variables récupèrent notre formulaire et ses champs
 const orderForm = document.querySelector(".cart__order__form");
 const firstName = document.getElementById("firstName");
 const lastName = document.getElementById("lastName");
 const address = document.getElementById("address");
 const city = document.getElementById("city");
-const email = document.getElementById("email"); //Recupère message erreur
+const email = document.getElementById("email");
 
+//Variables quis tockent les Regex
 const regexPrim = /^[a-z ,.'-]+$/i; //Regex pour prenom, nom, ville
+const regexAddress = /^[a-zA-Z0-9\s\''\-]*$/;
 const regexMail =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+//Notre object contact qui sera envoyé dans la requête POST
 let contactObj = {
   firstName: "",
   lastName: "",
@@ -135,14 +137,21 @@ let contactObj = {
   city: "",
   email: "",
 };
+//Ces booléans vont permettre une vérification finale des champs lors du submit du formulaire
+let firstIsValid = false;
+let lastIsValid = false;
+let addressIsValid = false;
+let cityIsValid = false;
+let emailIsValid = false;
 
-//Cet ensemble de fonction vérifié la validité des champs du formulaire de la page panier.
+//Cette série de 5 fonctions vérifie la validité des champs du formulaire.
 firstName.addEventListener("change", (e) => {
   const textError = document.getElementById("firstNameErrorMsg");
 
   if (firstName.value.match(regexPrim)) {
     contactObj.firstName = e.target.value;
     textError.innerHTML = "";
+    firstIsValid = true;
   } else {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
@@ -157,6 +166,7 @@ lastName.addEventListener("change", (e) => {
   if (lastName.value.match(regexPrim)) {
     contactObj.lastName = e.target.value;
     textError.innerHTML = "";
+    lastIsValid = true;
   } else {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
@@ -167,9 +177,10 @@ lastName.addEventListener("change", (e) => {
 address.addEventListener("change", (e) => {
   const textError = document.getElementById("addressErrorMsg");
 
-  if (address.value.match(regexPrim)) {
+  if (address.value.match(regexAddress)) {
     contactObj.address = e.target.value;
     textError.innerHTML = "";
+    addressIsValid = true;
   } else {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
@@ -183,6 +194,7 @@ city.addEventListener("change", (e) => {
   if (city.value.match(regexPrim)) {
     contactObj.city = e.target.value;
     textError.innerHTML = "";
+    cityIsValid = true;
   } else {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
@@ -192,9 +204,11 @@ city.addEventListener("change", (e) => {
 });
 email.addEventListener("change", (e) => {
   const textError = document.getElementById("emailErrorMsg");
+
   if (email.value.match(regexMail)) {
     contactObj.email = e.target.value;
     textError.innerHTML = "";
+    emailIsValid = true;
   } else {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
@@ -203,21 +217,23 @@ email.addEventListener("change", (e) => {
   }
 });
 
+//Cette fonction déclenche une vérification finale lors de la soumission du formulaire.
 orderForm.addEventListener("submit", (e) => {
-  e.preventDefault;
+  e.preventDefault();
   if (
-    contactObj.firstName !== "" &&
-    contactObj.lastName !== "" &&
-    contactObj.address !== "" &&
-    contactObj.city !== "" &&
-    contactObj.email !== ""
+    firstIsValid == true &&
+    lastIsValid == true &&
+    addressIsValid == true &&
+    cityIsValid == true &&
+    emailIsValid == true
   ) {
     post();
   } else {
+    e.preventDefault();
     alert("Veuillez remplir correctement les champs");
   }
 });
-
+//Cette fonction récupère les ID des produits du panier et les ajoutes au tableau d'ID qui sera envoyé dans notre requête.
 let tableOfIds;
 function recupIds() {
   for (let i = 0; i < productsData.length; i++) {
@@ -226,9 +242,10 @@ function recupIds() {
     console.log(tableOfIds);
   }
 }
-
+//La fonction POST qui va envoyer à l'API l'objet contact et le tableau d'ID afin de récupérer
+// notre bon de commande et nous redirige vers la page confirmation.
 function post() {
-  fetch("http://localhost:3000/api/products", {
+  fetch("http://localhost:3000/api/products/order", {
     method: "POST",
     redirect: "manual",
     headers: {
@@ -247,7 +264,8 @@ function post() {
       }
     })
     .then((data) => {
-      window.location.replace(`../html/confirmation.html/${data}`);
+      console.log(data);
+      window.location.href = `./confirmation.html?orderId=${data.orderId}`;
     })
     .catch((error) => {
       console.log(error);

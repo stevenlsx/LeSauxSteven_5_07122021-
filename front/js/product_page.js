@@ -9,15 +9,14 @@ const id = new URLSearchParams(document.location.search).get("id"); //Permet de 
 const buttonAdd = document.getElementById("addToCart");
 const inputQuantity = document.getElementById("quantity");
 
-let cart = [];
+let cart =
+  localStorage.panier !== undefined ? JSON.parse(localStorage.panier) : [];
 
 let oneProduct = "";
 
-/*On déclare fetchProduct comme une fonction asynchrone pour récuperer les données de l'API en premier, puis on les convertis en JSON,
- avant de les stocker dans une variable oneProduct. Enfin elle execute la fonction displayProduct.
- Et après la déclaration, on apelle la fonction fetchProduct pour qu'elle s'execute. */
+//Cette fonction asynchrone cible les id de l'API afin de récuperer les données du produit qui nous interesse.
 const fetchProduct = async () => {
-  await fetch(`http://localhost:3000/api/products/${id}`) //On insère à la fin la valeur de l'id récuperer pour récuperer les données du produit qui nous interesse.
+  await fetch(`http://localhost:3000/api/products/${id}`) //On insère à la fin
     .then((res) => res.json())
     .then((data) => {
       oneProduct = data;
@@ -27,8 +26,7 @@ const fetchProduct = async () => {
 fetchProduct();
 
 /*Cette fonction a pour role d'afficher sur la page du produit séléctionné ses caractéristiques, 
-prealablement récuperer depuis l'API et stocker dans oneProduct. Après avoir récuperer les id du fichier html,
-on remplace leur contenu par du html qui récupère les valeurs voulus pour chaque caractéristique de l'objet.
+prealablement récuperer depuis l'API.
  */
 function displayProduct() {
   itemImg.innerHTML = `
@@ -74,8 +72,7 @@ function addToCart() {
     quantity: parseInt(inputQuantity.value), //On récupère une string que l'on convertit en chiffre avec parseInt.
     color: colors.value,
   };
-  console.log(productCart);
-  console.log(cart);
+
   if (cart.length > 0) {
     let productExisted = false;
     for (let i = 0; i < cart.length; i++) {
