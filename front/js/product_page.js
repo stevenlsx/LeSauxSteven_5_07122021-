@@ -58,18 +58,14 @@ buttonAdd.addEventListener("click", (e) => {
 });
 
 /*cette fonction est executé lors du click sur le bouton d'ajout au panier. On créé un objet qui récupère
-les donées du produit, sa quantité et sa couleur, le tout stocké dans une constante.
-On créé ensuite nos conditions: Si le panier n'est pas vide: on parcourt les index de notre tableau avec
-la boucle for. Pour chaque index, elle vérifie si l'id du produit ajouté existe déja dans le panier ET
-si il a la même couleur. Si ces 2 conditions sont remplis alors on ajouté la nouvelle quantité 
-a la quantité du produit existant du panier. Si les 2 conditions ne sont pas remplis, on ajoute le produit au panier.
-Et si le panier est vide au depart, alors idem, on ajoute le produit au panier. On s'assure a chaque etape des conditions
-que le panier est poussé sur le local storage. 
- */
+les donées du produit, sa quantité et sa couleur.
+Si le panier n'est pas vide: on vérifie si l'id du produit ajouté existe déja dans le panier ET
+si il a la même couleur. Si c'est validé, alors on ajouté la nouvelle quantité à la quantité du produit existant. Si les 2 conditions ne sont pas valide,
+ on ajoute le produit au panier. Si le panier est vide au depart, alors idem, on ajoute le produit au panier.*/
 function addToCart() {
   const productCart = {
     id: oneProduct._id,
-    quantity: parseInt(inputQuantity.value), //On récupère une string que l'on convertit en chiffre avec parseInt.
+    quantity: parseInt(inputQuantity.value),
     color: colors.value,
   };
 

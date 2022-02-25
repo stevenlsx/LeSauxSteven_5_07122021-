@@ -76,8 +76,6 @@ function changeQuantity(e, id, color) {
   priceCalcul();
   quantityCalcul();
   recupIds();
-  console.log(e);
-  console.log(productsData);
 }
 //Cette fonction supprime le/les produits voulu du localstorage et de la page panier les articles
 function deleteProduct(id, color) {
@@ -156,7 +154,6 @@ firstName.addEventListener("change", (e) => {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
     e.preventDefault;
-    console.log(textError);
   }
 });
 
@@ -171,7 +168,6 @@ lastName.addEventListener("change", (e) => {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
     e.preventDefault;
-    console.log(textError);
   }
 });
 address.addEventListener("change", (e) => {
@@ -185,7 +181,6 @@ address.addEventListener("change", (e) => {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
     e.preventDefault;
-    console.log(textError);
   }
 });
 city.addEventListener("change", (e) => {
@@ -199,7 +194,6 @@ city.addEventListener("change", (e) => {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
     e.preventDefault;
-    console.log(textError);
   }
 });
 email.addEventListener("change", (e) => {
@@ -213,7 +207,6 @@ email.addEventListener("change", (e) => {
     textError.innerHTML = "Le champs est invalide";
     textError.style.color = "red";
     e.preventDefault;
-    console.log(textError);
   }
 });
 
@@ -239,7 +232,6 @@ function recupIds() {
   for (let i = 0; i < productsData.length; i++) {
     tableOfIds = [];
     tableOfIds.push(productsData[i].id);
-    console.log(tableOfIds);
   }
 }
 //La fonction POST qui va envoyer à l'API l'objet contact et le tableau d'ID afin de récupérer
@@ -264,7 +256,6 @@ function post() {
       }
     })
     .then((data) => {
-      console.log(data);
       window.location.href = `./confirmation.html?orderId=${data.orderId}`;
     })
     .catch((error) => {
